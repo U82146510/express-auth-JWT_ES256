@@ -29,7 +29,7 @@ const JWT_CONFIG = {
     audience:env.JWT_ISSUER
 };
 
-interface JwtPayload extends JWTPayload{
+export interface JwtPayload extends JWTPayload{
     id:string;
     role:'admin'|'moderator'|'user';
 };
