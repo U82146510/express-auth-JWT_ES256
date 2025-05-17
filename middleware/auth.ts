@@ -1,24 +1,21 @@
 import { type Request,type Response,type NextFunction } from "express";
-import { JWTService,type JwtPayload } from "../auth/jwt.services";
+import { JWTService,type JwtPayload } from "../auth/jwt.services.ts";
 
 function isValidPayload(arg:unknown):arg is JwtPayload{
-    if(
+    return(
         typeof arg ==='object' && 
         arg!==null &&
         'id' in arg &&
         'role' in arg &&
-        (arg.role === 'admin' || arg.role === 'user' || arg.role==='moderator')
-
-    ){
-        return true
-    }
-    return false
-}
+        (arg as any).role &&
+        ['admin','user','moderator'].includes((arg as any).role)
+    )
+};
 
 export const auth = async(req:Request,res:Response,next:NextFunction)=>{
         const authHeader = req.headers.authorization;
 
-        if(!authHeader?.includes('Bearer ')){
+        if(!authHeader?.startsWith('Bearer ')){
             res.status(401).json({error:'Invalid header',message:'Authorization header must be: Bearer <token>'});
             return;
         }
@@ -30,7 +27,7 @@ export const auth = async(req:Request,res:Response,next:NextFunction)=>{
             res.status(403).json({error:'Invalid token',message:'Malformed token payload'});
             return;
         }
-        req.user = decoded as JwtPayload;
+        req.user = decoded;
         next();
     } catch (error) {
         res.status(401).json({message:'Invalid token'});      

@@ -1,6 +1,6 @@
 import {SignJWT,jwtVerify,type JWTPayload} from 'jose';
 import fs from 'fs';
-import {loadProductionEnv} from '../config/env';
+import {loadProductionEnv} from '../config/env.ts';
 
 const env = loadProductionEnv()
 
