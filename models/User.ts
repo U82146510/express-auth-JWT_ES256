@@ -37,4 +37,4 @@ user_schema.methods.verify_password = async function(password:string):Promise<bo
     }
 };
 
-export const User = model<IUser>('Signup',user_schema);
+export const User = model<IUser>('User',user_schema);
