@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({path:path.resolve(__dirname,'../../.env')});
 
-const atlas = process.env.atlas_uri;
+const atlas = process.env.atlas;
 if(!atlas){
     throw new Error("missing atlas connection string");
 }

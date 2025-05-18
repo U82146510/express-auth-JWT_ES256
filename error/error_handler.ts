@@ -1,6 +1,6 @@
 import { type Request,type Response,type NextFunction } from "express"
 
-interface ApiError{
+export interface ApiError{
     statusCode:number;
     message:string;
     details?:unknown;
@@ -8,18 +8,27 @@ interface ApiError{
     isOperational:boolean;
 };
 
-class ApiError extends Error implements ApiError{
+export class ApiError extends Error implements ApiError {
+    public message: string;
+    public statusCode: number;
+    public details?: unknown;
+    public isOperational: boolean;
+  
     constructor(
-        public message:string,
-        public statusCode:number = 500,
-        public details?:unknown,
-        public isOperational:boolean = true,
-    ){
-        super(message);
-        this.name = this.constructor.name;
-        if(Error.captureStackTrace){
-            Error.captureStackTrace(this,this.constructor)
-        }
+      message: string,
+      statusCode: number = 500,
+      details?: unknown,
+      isOperational: boolean = true,
+    ) {
+      super(message);
+      this.message = message;
+      this.statusCode = statusCode;
+      this.details = details;
+      this.isOperational = isOperational;
+      this.name = this.constructor.name;
+      if (Error.captureStackTrace) {
+        Error.captureStackTrace(this, this.constructor);
+      }
     }
 };
 
