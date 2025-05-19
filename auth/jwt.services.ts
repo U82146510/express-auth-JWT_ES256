@@ -21,7 +21,7 @@ const loadKey = (keyPath:string,permission?:number):string=>{  // loading the ke
 const privateKey = loadKey(env.PRIVATE_KEY_PATH,0o400);
 const publicKey = loadKey(env.PUBLIC_KEY_PATH,0o444);
 
-const JWT_CONFIG = {
+const JWT_CONFIG = {  // config object for JWT
     algorithm:'ES256' as const,
     expiresIn:env.JWT_EXPIRES_IN,
     refreshExpiresIn:env.JWT_REFRESH_EXPIRE_IN,
@@ -35,15 +35,15 @@ export interface JwtPayload extends JWTPayload{
 };
 
 export class JWTService{
-    private static async getPrivateKey(){
+    private static async getPrivateKey(){  // get key dynamically
         const {importPKCS8} = await import('jose');
         return importPKCS8(privateKey,'ES256');
     };
-    private static async getPublicKey(){
+    private static async getPublicKey(){ // get key dynamically
         const { importSPKI } = await import('jose');
         return importSPKI(publicKey, 'ES256');
     };
-    static async signToken(payload:JwtPayload):Promise<string>{
+    static async signToken(payload:JwtPayload):Promise<string>{  //sign the token 
         return new SignJWT(payload)
         .setProtectedHeader({alg:JWT_CONFIG.algorithm})
         .setIssuedAt()
@@ -61,7 +61,7 @@ export class JWTService{
         .setAudience(JWT_CONFIG.audience)
         .sign(await this.getPrivateKey());
     };
-    static async verify(token:string):Promise<JWTPayload>{
+    static async verify(token:string):Promise<JWTPayload>{ 
         const {payload} = await jwtVerify(token,
             await this.getPublicKey(),
         {

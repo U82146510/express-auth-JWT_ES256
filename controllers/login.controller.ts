@@ -20,7 +20,7 @@ function login_assert(arg:unknown):asserts arg is LoginType{
         typeof (arg as any).password !== 'string' ||
         typeof (arg as any).email !== 'string'
     ){
-        throw new Error('Invalud signup_type')
+        throw new Error('Invalid signup_type')
     }
 };
 
@@ -33,12 +33,12 @@ export const user_login = async (req:Request,res:Response,next:NextFunction)=>{
     login_assert(parsed.data);
     try {
         const user = await User.findOne({email:parsed.data.email});
-        if(!user ||!user.verify_password(parsed.data.password)){
+        if(!user ||!(await user.verify_password(parsed.data.password))){
            res.status(401).json({message:'Invalid user or password'});
            return; 
         }
-        const accessToken = await JWTService.signToken({id:user._id as string,role:'admin'});
-        const refreshToken = await JWTService.signRefreshToken({id:user._id as string,role:'admin'});
+        const accessToken = await JWTService.signToken({id:user._id as string,role:user.role});
+        const refreshToken = await JWTService.signRefreshToken({id:user._id as string,role:user.role});
         res.cookie('refreshToken',refreshToken,{
             httpOnly:true,
             secure:false,

@@ -4,14 +4,14 @@ import bcrypt from "bcryptjs";
 interface IUser extends Document{
     email:string,
     password:string,
-    role:'admin'|'user',
-    verify_password(password:string):boolean;
+    role:'admin'|'user'|'moderator',
+    verify_password(password:string):Promise<boolean>;
 };
 
 const user_schema = new Schema<IUser>({
     email:{type:String,required:[true,'email is required'],lowercase:true,unique:true},
     password:{type:String,required:true,minlength:6},
-    role:{type:String,enum:['admin','user'],default:'user'}
+    role:{type:String,enum:['admin','user','moderator'],default:'user'}
 });
 
 user_schema.pre('save',async function(next){

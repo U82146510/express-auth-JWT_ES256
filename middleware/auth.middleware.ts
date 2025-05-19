@@ -27,9 +27,10 @@ export const auth = async(req:Request,res:Response,next:NextFunction)=>{
             res.status(403).json({error:'Invalid token',message:'Malformed token payload'});
             return;
         }
+        console.log(decoded)
         req.user = decoded;
         next();
     } catch (error) {
-        res.status(401).json({message:'Invalid token'});      
+        res.status(401).json({message:'error, Invalid token'});      
     }
 };
