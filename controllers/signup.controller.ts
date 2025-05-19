@@ -6,13 +6,13 @@ import {User} from '../models/User.ts';
 interface SignupType{
     email:string;
     password:string;
-    role:'admin'|'user';
+    role:'admin'|'user'|'moderator';
 };
 
 const signup = z.object({
     email:z.string().email(),
     password:z.string().min(8),
-    role:z.enum(['user','admin']).default('user'),
+    role:z.enum(['user','admin','moderator']).default('user'),
 });
 
 function signup_assert(arg:unknown):asserts arg is SignupType{
