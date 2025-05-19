@@ -10,7 +10,6 @@ export const authoriz =(requiredRole:'admin'|'moderator'|'user')=> (req:Request,
             res.status(401).json({error:'Unauthorized',message:'No user role found'});
             return;
         }
-        console.log(userRole);
         if(rolesHierarchy.indexOf(userRole)<rolesHierarchy.indexOf(requiredRole)){
             res.status(403).json({error:'Forbidden',message:'Insufficient permission'});
             return;
